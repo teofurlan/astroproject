@@ -1,8 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro"
 import ImageCard from '../components/ImageCard.astro'
+const id = Astro.params.id ?? '1'
 ---
 
-<Layout title="Page">
-  <ImageCard id="1"/>
+<Layout title="Pagina">
+  <ImageCard id={id}/>
 </Layout>

@@ -1,0 +1,37 @@
+---
+type Props = {
+  id: string
+}
+
+const id = Astro.props.id
+
+const alts: Record<string, string> = {
+  1: 'Primera imagen',
+  2: 'Segunda imagen',
+  3: 'Tercera imagen'
+}
+
+const titles: Record<string, string> = {
+  1: 'Golden hour',
+  2: 'Colores',
+  3: 'Paisaje'
+}
+
+const alt = alts[id]
+const title = titles[id]
+---
+<section class="card">
+  <h1 class="title">{title}</h1>
+  <div class="image-container">
+    <a href={(parseInt(id, 10) - 1).toString()} class="next">&lt;</a>
+    <img class="image" src={`${id}.jpg`} alt={alt}>
+    <a href={(parseInt(id, 10) + 1).toString()} class="next">&gt;</a>
+  </div>
+</section>
+
+<script>
+  const imagen = document.querySelector('.image')
+  imagen.addEventListener('click', () => {
+    alert('Click')
+  })
+</script>

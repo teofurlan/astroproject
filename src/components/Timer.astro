@@ -1,0 +1,23 @@
+<h1>Timer</h1>
+
+<style></style>
+
+<script>
+  const button = document.querySelector('.start-button')
+  const timer = document.querySelector('.timer')
+  button?.addEventListener('click', () => {
+    let count = 60 * 5
+    const interval = setInterval(() => {
+      count--
+      const minutes = Math.floor(count / 60).toString().padStart(2, '0')
+      const seconds = (count % 60).toString().padStart(2, '0')
+      const text = `${minutes}:${seconds}`
+      if (timer) {
+        timer.innerHTML = text
+      }
+      if (count <= 0) {
+        clearInterval(interval)
+      }
+    }, 1000)
+  })
+</script>
