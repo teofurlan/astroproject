@@ -1,23 +1,117 @@
-<h1>Timer</h1>
+<style>
 
-<style></style>
+  .timer-container {
+    width: 450px;
+    display: block;
+    margin: 100px auto;
+    position: relative;
+  }
+
+  .timer-text {
+    font-size: 15.5rem;
+    margin: 10px;
+    text-align: center;
+    justify-content: center;
+    color: rgb(210, 210, 210);
+  }
+
+  .timer-button {
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    border: 10px solid #00f;
+    /* clip-path: polygon(50% 0%, 100% 0, 100% 100%, 50% 100%, 50% calc(100% - 100*v)); */
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+  }
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    background: radial-gradient(
+      circle,
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 0.8) 30%,
+      rgba(0, 0, 0, 0.6) 60%,
+      rgba(0, 0, 0, 0.4) 90%,
+      rgba(0, 0, 0, 0) 100%
+    );
+    /* background: rgba(75, 75, 75, .9); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    opacity: 0;
+    transition: all 1s;
+  }
+
+  .overlay-text {
+    font-size: 12rem;
+    color: var(--white);
+    text-align: center;
+  }
+
+  .timer-container:hover .overlay {
+    opacity: 1;
+  }
+</style>
+<div class="timer-container">
+  <button class="timer-button">
+    <h3 class="timer-text">05:00</h3>
+    <div class="overlay">
+      <p class="overlay-text">START</p>
+    </div>
+  </button>
+</div>
 
 <script>
-  const button = document.querySelector('.start-button')
-  const timer = document.querySelector('.timer')
-  button?.addEventListener('click', () => {
-    let count = 60 * 5
-    const interval = setInterval(() => {
-      count--
-      const minutes = Math.floor(count / 60).toString().padStart(2, '0')
-      const seconds = (count % 60).toString().padStart(2, '0')
-      const text = `${minutes}:${seconds}`
-      if (timer) {
-        timer.innerHTML = text
+  const button = document.querySelector(".timer-button");
+  const timerText = document.querySelector(".timer-text");
+  const overlayText = document.querySelector(".overlay-text");
+  const timerBorder = document.getElementById('timer')
+  let counting = false;
+  let defaultTime = "05:00";
+  let interval: NodeJS.Timeout | undefined;
+
+  if (timerText) {
+    timerText.innerHTML = defaultTime;
+  }
+  button?.addEventListener("click", () => {
+    if (!counting) {
+      counting = true;
+      if (overlayText) {
+        overlayText.innerHTML = "STOP";
       }
-      if (count <= 0) {
-        clearInterval(interval)
+
+      let count = 60 * 5;
+      interval = setInterval(() => {
+        count--;
+        const minutes = Math.floor(count / 60)
+          .toString()
+          .padStart(2, "0");
+        const seconds = (count % 60).toString().padStart(2, "0");
+        const text = `${minutes}:${seconds}`;
+        if (timerText) {
+          timerText.innerHTML = text;
+        }
+        if (count <= 0) {
+          clearInterval(interval);
+        }
+      }, 1000);
+    } else {
+      if (overlayText) {
+        counting = false;
+        overlayText.innerHTML = "START";
+        if (timerText) {
+          timerText.innerHTML = defaultTime;
+        }
+        clearInterval(interval);
       }
-    }, 1000)
-  })
+    }
+  });
 </script>
