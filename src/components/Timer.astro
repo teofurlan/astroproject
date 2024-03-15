@@ -9,6 +9,7 @@
   .timer-text {
     font-size: 11.5rem;
     color: rgb(210, 210, 210);
+    transition: all 1s ease-in;
   }
 
   .timer-button {
@@ -20,7 +21,6 @@
     background-color: rgba(0, 0, 0, 1);
     cursor: pointer;
     z-index: 20;
-    transition: all 1s linear;
   }
 
   .outer {
@@ -42,20 +42,41 @@
     background-color: rgba(255, 255, 255, 0.1);
     background-color: rgba(255, 255, 255, 0);
   }
-  
+
+  .overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 450px;
+    height: 450px;
+    background: linear-gradient(
+      to bottom right,
+      rgba(41, 28, 230, 0.7),
+      rgba(203, 32, 255, 0.7)
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+
   .overlay-text {
     font-size: 12rem;
     color: var(--white);
     text-align: center;
-  }
-
-  .timer-button:hover .overlay {
-    opacity: 1;
+    transition: all 1s;
   }
 
   .timer-button:hover .timer-text {
     opacity: 0;
-    transition: all 1s linear;
+    transition: opacity 1s ease;
+  }
+
+  .timer-button:hover .overlay {
+    opacity: 1;
+    transition: opacity 1s ease;
   }
 
   circle {
@@ -73,32 +94,13 @@
     top: 0;
     left: 0;
   }
-
-  .overlay {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 450px;
-    height: 450px;
-    background: linear-gradient(
-      to bottom right,
-      rgba(203, 95, 224, 0.7),
-      rgba(129, 32, 255, 0.7)
-    );
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    opacity: 0;
-    transition: all 1s;
-  }
 </style>
 
 <div class="timer-container">
   <div class="outer">
     <button class="timer-button inner">
       <h3 class="timer-text">05:00</h3>
-      <div class="overlay">
+      <div class="overlay" id="overlay">
         <p class="overlay-text">START</p>
       </div>
     </button>
@@ -122,65 +124,64 @@
 </div>
 
 <script>
-  const button = document.querySelector(".timer-button");
+  const timerButton = document.querySelector(".timer-button");
   const timerText = document.querySelector(".timer-text");
+  // Overlay
   const overlayText = document.querySelector(".overlay-text");
+  // Progress Bar
   const timerBar = document.getElementById("timerBar");
   const circumference = 1445;
-  let counting = false;
+  // Global variables
+  let isCounting = false;
   let defaultTime = 5;
   let interval: NodeJS.Timeout | undefined;
-  if (document.querySelector(".inner")) {
-    console.log(document.querySelector(".inner")?.clientWidth);
-  }
 
   if (timerText) {
     timerText.innerHTML = `${defaultTime.toString().padStart(2, "0")}:00`;
   }
-  button?.addEventListener("click", () => {
-    if (!counting) {
-      counting = true;
+  timerButton?.addEventListener("click", () => {
+    if (!isCounting) {
+      isCounting = true;
+      // Change the text of the overlay to stop
       if (overlayText) {
         overlayText.innerHTML = "STOP";
       }
-
-      let count = 60 * 5;
+      // Calculates the total amount of seconds
+      let count = 60 * defaultTime;
       interval = setInterval(() => {
         count--;
-        const minutes = Math.floor(count / 60)
-          .toString()
-          .padStart(2, "0");
-        const seconds = (count % 60).toString().padStart(2, "0");
-        const text = `${minutes}:${seconds}`;
+        const minutes = Math.floor(count / 60).toString().padStart(2, "0")
+        const seconds = (count % 60).toString().padStart(2, "0")
+        const text = `${minutes}:${seconds}`
         if (timerText) {
-          timerText.innerHTML = text;
+          timerText.innerHTML = text
         }
         if (timerBar) {
           const porcentage = (count / (defaultTime * 60)) * 100;
           const progress = circumference - (circumference * porcentage) / 100;
           console.log(count, porcentage, progress);
-          timerBar.style.strokeDashoffset = `${progress}`;
-          console.log();
+          timerBar.style.strokeDashoffset = `${progress}`
+          console.log()
         }
         if (count <= 0) {
-          clearInterval(interval);
+          clearInterval(interval)
         }
       }, 1000);
     } else {
+      isCounting = false;
       if (overlayText) {
-        counting = false;
-        // Configure the overlay's text to start
+        // Change the overlay's text to start
         overlayText.innerHTML = "START";
         // Restart the timer text to the initial time
         if (timerText) {
-          timerText.innerHTML = `${defaultTime.toString().padStart(2, "0")}:00`;
+          timerText.innerHTML = `${defaultTime.toString().padStart(2, "0")}:00`
         }
         // Fill the timer progress bar again
         if (timerBar) {
-          timerBar.style.strokeDashoffset = `${0}`;
+          timerBar.style.strokeDashoffset = `${0}`
         }
         // Stops the timer
-        clearInterval(interval);
+        clearInterval(interval)
       }
     }
   });
