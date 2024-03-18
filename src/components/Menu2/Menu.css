@@ -1,0 +1,124 @@
+.menu__text {
+    font-size: 1.7rem;
+}
+
+.menu__subtext {
+    font-size: 1.5rem;
+}
+
+.menu {
+    position: relative;
+}
+
+.menu__button { 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+}
+
+.menu__button__icon {
+    color: var(--white);
+    color: rgba(255, 255, 255, .7);
+    width: 30px;
+    height: 30px;
+    transition: all .5s;
+}
+
+.menu__button__icon:hover {
+    color: var(--white);
+    width: 3.3rem;
+    height: 3.3rem;
+}
+
+.main-menu__container {
+    color: rgba(255, 255, 255, .7);
+    background-color: rgba(0, 0, 0, .65);
+    border: none;
+}
+
+@media (min-width: 768px) {
+    .main-menu__container {
+        display: flex;
+        position: absolute;
+        top: 7.3rem;
+        right: -15rem;
+        height: 75vh;
+        max-width: 27rem;
+        max-width: 0rem;
+        overflow: hidden;
+        transition: max-width .5s;
+        z-index: 100;
+    }
+}
+
+.menu--opened {
+    max-width: 27rem;
+}
+
+.main-menu {
+    order: 2;
+    max-width: 27rem;
+    transition: max-width 1s;
+}
+
+.main-menu--closed {
+    max-width: 0;
+}
+
+
+.main-menu__button {
+    max-width: 27rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    order: 1;
+    width: 27rem;
+    padding: 12px;
+    transition: transform 1s;
+}
+
+.main-menu__button span {
+    font-size: 22px;
+    transition: transform .5s;
+}
+
+.main-menu__button:hover span {
+    transform: translateX(3px);
+}
+
+.main-menu__button:hover p {
+    font-weight: 500;
+}
+
+.time-menu {
+    display: flex;
+    order: 1;
+    flex-direction: column;
+    max-width: 27rem;
+    overflow: hidden;
+    transition: all 1s;
+}
+
+.time-menu__button {
+    width: 27rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: .45rem;
+}
+
+.time-menu__button span {
+    padding-left: .7rem;
+}
+
+.time-menu--closed {
+    max-width: 0;
+    transition: all 1s;
+}
+
+.main-menu__container button:hover {
+    color: #fff;
+    background: linear-gradient(to bottom right, rgba(41, 28, 230, 0.5), rgba(203, 32, 255, 0.5));
+}

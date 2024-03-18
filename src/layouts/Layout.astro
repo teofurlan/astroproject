@@ -4,6 +4,8 @@ interface Props {
 }
 
 const { title } = Astro.props;
+import "../styles/layout.css";
+import Menu from "../components/Menu2/Menu.astro";
 ---
 
 <!doctype html>
@@ -25,248 +27,24 @@ const { title } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
       rel="stylesheet"
     />
-
     <title>{title}</title>
   </head>
   <body class="bg-zinc-200 flex-col">
     <body>
       <header class="header">
-        <div class="container">
-          <div class="navbar">
-            <a class="logo navbar__text" href="index.astro">
-              <h1 class="logo__name no-margin center-text navbar__text">
-                Pomodoro Timer
-              </h1>
-            </a>
-            <div class="menu">
-              <button class="menu-open-button" id="menuDisplayButton">
-                <svg
-                  class="menu-icon"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="1em"
-                  height="1em"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    fill="currentColor"
-                    fill-rule="evenodd"
-                    d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75M2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8m0 4.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75"
-                    clip-rule="evenodd"></path>
-                </svg>
-              </button>
-              <ul class="menu-options__closed" id="optionsContainer">
-                <li>
-                  <button class="menu-options-button" id="test">
-                    <h3>Test</h3>
-                    <span>10 sec</span>
-                  </button>
-                </li>
-                <li>
-                  <button class="menu-options-button" id="normal">
-                    <h3>Normal</h3>
-                    <span>20 min</span>
-                  </button>
-                </li>
-                <li>
-                  <button class="menu-options-button" id="medium">
-                    <h3>Medium</h3>
-                    <span>45 min</span></button>
-                </li>
-                <li>
-                  <button class="menu-options-button" id="extended">
-                    <h3>Extended</h3>
-                    <span>60 min</span></button>
-                </li>
-              </ul>
-            </div>
-          </div>
+        <div class="navbar">
+          <h1 class="no-margin center-text navbar__text">Pomodoro<b>Timer</b></h1>
+          <Menu />
         </div>
       </header>
       <section class="main">
         <slot />
       </section>
       <footer class="footer">
-        <h3><footer></footer></h3>
+        <div class="footer__content">
+          <p class="footer__text">© 2024 Pomodoro Timer</p>
+        </div>
       </footer>
     </body>
   </body>
-
-  <script>
-    let menuDisplayButton = document.getElementById("menuDisplayButton");
-    let optionsContainer = document.getElementById("optionsContainer");
-    menuDisplayButton?.addEventListener("click", () => {
-      if (optionsContainer) {
-        if (optionsContainer.classList.contains("menu-options__opened")) {
-          optionsContainer.classList.remove("menu-options__opened");
-        } else {
-          optionsContainer.classList.add("menu-options__opened");
-        }
-      }
-    });
-  </script>
-
-  <style is:global>
-    :root {
-      --white: #ffffff;
-      --black: #000000;
-    }
-
-    * {
-      font-family:
-        Azeret mono,
-        monospace;
-      font-optical-sizing: auto;
-      font-weight: 300;
-      font-style: normal;
-    }
-
-    body {
-      background-image: url("bg_1.jpg");
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-position: center center;
-    }
-
-    body,
-    html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }
-
-    html {
-      box-sizing: border-box;
-      font-size: 62.5%;
-    }
-
-    header,
-    section,
-    footer {
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .container {
-      width: min(90%, 180rem);
-      margin: 0 auto;
-    }
-
-    h1 {
-      font-size: 3.5rem;
-    }
-
-    /** Utilities **/
-    .no-margin {
-      margin: 0;
-    }
-
-    .no-padding {
-      padding: 0;
-    }
-
-    .center-text {
-      text-align: center;
-    }
-
-    body {
-      /* display: flex; */
-      justify-content: center;
-      align-items: center;
-      width: 100vw;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    header {
-      background-color: rgba(0, 0, 0, 0.75);
-      border: none;
-    }
-
-    .navbar {
-      padding: 2rem 0;
-    }
-
-    @media (min-width: 768px) {
-      .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-    }
-
-    .navbar__text {
-      color: var(--white);
-    }
-
-    .menu {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .menu-icon {
-      color: var(--white);
-      width: 30px;
-      height: 30px;
-    }
-
-    .menu-options__closed {
-      display: none;
-      top: 100px;
-      position: absolute;
-    }
-
-    .menu-options__opened {
-      background-color: rgba(0, 0, 0, 0.75);
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      flex-direction: column;
-    }
-
-    .menu-options-button {
-      /* border: 3px solid violet; */
-      display: flex;
-      align-items: flex-start;
-      justify-content: flex-start;
-      flex-direction: column;
-      padding: 10px;
-      height: auto;
-      width: 20rem;
-      font-size: 2rem;
-      color: #ffffff;
-    }
-
-    .menu-options-button:hover {
-      background-color: rgba(50, 50, 50, 0.75);
-    }
-
-    .menu-options-button h3 {
-      font-size: 2rem;
-    }
-
-    .menu-options-button span {
-      padding-left: 1rem;
-      font-size: 1.5rem;
-    }
-
-    .main {
-      width: auto;
-      height: 75vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-around;
-      align-items: center;
-      background-color: rgba(0, 0, 0, 0.2);
-      padding: 20px;
-    }
-
-    footer {
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.75);
-    }
-  </style>
 </html>

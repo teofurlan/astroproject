@@ -1,0 +1,49 @@
+---
+import './Menu.css'
+---
+
+<div class="menu">
+  <button class="menu-open-button" id="menuDisplayButton">
+    <svg
+      class="menu-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 16 16"
+    >
+      <path
+        fill="currentColor"
+        fill-rule="evenodd"
+        d="M2 3.75A.75.75 0 0 1 2.75 3h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 3.75M2 8a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 8m0 4.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75"
+        clip-rule="evenodd"></path>
+    </svg>
+  </button>
+  <ul class="menu-options__closed" id="optionsContainer">
+    <li>
+      <button class="menu-options-button" id="test">
+        <h3>Test</h3>
+        <span>10 sec</span>
+      </button>
+    </li>
+    <li>
+      <button class="menu-options-button" id="normal">
+        <h3>Normal</h3>
+        <span>20 min</span>
+      </button>
+    </li>
+    <li>
+      <button class="menu-options-button" id="medium">
+        <h3>Medium</h3>
+        <span>45 min</span>
+      </button>
+    </li>
+    <li>
+      <button class="menu-options-button" id="extended">
+        <h3>Extended</h3>
+        <span>60 min</span>
+      </button>
+    </li>
+  </ul>
+</div>
+
+<script src="./Menu.js"></script>

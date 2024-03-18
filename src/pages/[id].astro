@@ -1,11 +1,9 @@
 ---
 import Layout from "../layouts/Layout.astro"
-import Timer from "../components/Timer.astro"
-import ImageCard from '../components/ImageCard.astro'
+import Timer from "../components/Timer/Timer.astro"
 const id = Astro.params.id ?? '1'
 ---
 
 <Layout title="Pomodoro Timer">
-  <!-- <ImageCard id={id}/> -->
   <Timer />
 </Layout>
