@@ -1,14 +1,14 @@
 ---
-const { taskDescription, index } = Astro.props;
-const randomId = Math.random().toString(36).substring(10)
+const { taskDescription} = Astro.props;
+const randomId = Math.random().toString(36).substring(7);
 ---
 
 <div
-  class="flex items-center gap-2 h-12 border-b bg-white border-hint pl-4 last-of-type:border-b-0"
+  class="flex items-center gap-2 h-12 border-b bg-white border-hint pl-4 last-of-type:border-b-0 task"
 >
   <input
     type="checkbox"
-    id=randomId
+    id=`checkbox-${randomId}`
     class="flex items-center justify-center relative peer shrink-0
     appearance-none w-5 h-5 border-[.75px] border-hint rounded-full bg-white"
   />
@@ -28,10 +28,11 @@ const randomId = Math.random().toString(36).substring(10)
   <div class="flex items-center justify-center bg-white h-full">
     <div
       class="flex mix-blend-difference bg-negativeHint h-0 transition-all duration-200 translate-y-[2px]"
-      id=`strikethrough${index}`
+      id=`strikethrough-${randomId}`
     >
       <label
-        id=randomId
+        id=`label-${randomId}`
+        for=`checkbox-${randomId}`
         class="flex items-center text-negativeGeneral mix-blend-difference text-xl translate-y-[-2px]"
         >{taskDescription}</label
       >

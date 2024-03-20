@@ -1,39 +1,40 @@
 ---
 import Task from "./Task.astro";
-import CardFooter from "./CardFooter.astro"
+import CardFooter from "./CardFooter.astro";
 import Dropdown from "./Dropdown/Dropdown.astro";
 let index = 0;
 ---
 
 <section class="flex flex-col items-center w-[800px] drop-shadow-2xl">
   <div class="w-full border border-hint border-s-hint z-40">
-    <Dropdown text={'What needs to be done?'}/>
-    <Task taskDescription="Go Shoping" index={index++} />
-    <Task taskDescription="Refactor Backend" index={index++} />
-    <Task taskDescription="Add new feature to app" index={index++} />
-    <Task taskDescription="Todo1" index={index++} />
-    <CardFooter intemsLeft={3}/>
+    <Dropdown text={"What needs to be done?"} />
+    <Task taskDescription="Go Shoping"/>
+    <Task taskDescription="Refactor Backend"/>
+    <Task taskDescription="Add new feature to app"/>
+    <Task taskDescription="Todo1"/>
+    <CardFooter intemsLeft={3} />
   </div>
   <div class="w-[87%] h-2.5 shadow-md bg-white z-30"></div>
   <div class="w-[83%] h-2.5 shadow-md bg-white z-20"></div>
 </section>
 
-<script define:vars={{ index }}>
 
-  document.addEventListener('change', (e) => {
-    if (!e.target.matches('input[type="checkbox"]')) { return }
-    e.target.getAttribute('id')
-  })
-  checkbox.addEventListener("change", () => {
-    if (checkbox.checked) {
-      console.log()
-      strikethrough.style.height = '1px'
-      label.style.color = '#2f2f2f'
+<script is:inline>
+  document.addEventListener("change", (e) => {
+    if (!e.target.matches('input[type="checkbox"]')) {
+      return;
     }
-    else {
-      strikethrough.style.height = '0'
-      label.style.color = '#d8dbdb'
+
+    const id = e.target.getAttribute("id").split("-")[1];
+    const checkbox = document.getElementById(`checkbox-${id}`);
+    const strikethrough = document.getElementById(`strikethrough-${id}`);
+    const label = document.getElementById(`label-${id}`);
+    if (checkbox.checked) {
+      strikethrough.style.height = "1px";
+      label.style.color = "#2f2f2f";
+    } else {
+      strikethrough.style.height = "0";
+      label.style.color = "#d8dbdb";
     }
   });
 </script>
-
