@@ -4,47 +4,23 @@ interface Props {
 }
 
 const { title } = Astro.props;
-import "../styles/layout.css";
-import Menu from "../components/Menu2/Menu.astro";
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class="font-notosanssc font-normal">
   <head>
+    <title>{title}</title>
     <meta charset="UTF-8" />
     <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Azeret+Mono:ital,wght@0,100..900;1,100..900&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-      rel="stylesheet"
-    />
-    <title>{title}</title>
+    <meta name="generator" content={Astro.generator} />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap">
   </head>
-  <body class="bg-zinc-200 flex-col">
-    <body>
-      <header class="header">
-        <div class="navbar">
-          <h1 class="no-margin center-text navbar__text">Pomodoro<b>Timer</b></h1>
-          <Menu />
-        </div>
-      </header>
-      <section class="main">
-        <slot />
-      </section>
-      <footer class="footer">
-        <div class="footer__content">
-          <p class="footer__text">© 2024 Pomodoro Timer</p>
-        </div>
-      </footer>
-    </body>
+  <body class="w-lvw h-lvh flex flex-col items-center justify-center bg-background gap-3">
+    <h1 class="text-title text-6xl font-bold opacity-15">todos</h1>
+    <slot />
   </body>
 </html>
+
+
+<script></script>

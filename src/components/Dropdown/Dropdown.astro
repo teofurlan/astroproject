@@ -1,0 +1,33 @@
+---
+const { text } = Astro.props;
+---
+
+<div
+  class="flex items-center gap-3 h-16 border-b bg-white border-hint pl-4 last-of-type:border-b-0"
+>
+  <input
+    type="checkbox"
+    id="dropdown"
+    class="flex items-center justify-center relative peer shrink-0 appearance-none w-5 h-5"
+  />
+  <svg
+    class="absolute w-5 h-5 text-hint peer-checked:rotate-180 pointer-events-none transition-all"
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="5.5 5.5 13 13"
+    ><path
+      fill="currentColor"
+      d="m12 13.171l4.95-4.95l1.414 1.415L12 16L5.636 9.636L7.05 8.222z"
+    ></path></svg
+  >
+  <div>
+    <label
+      class="flex items-center text-negativeHint mix-blend-difference text-2xl"
+    >
+      {text}
+    </label>
+  </div>
+</div>
+
+<script src="./Dropdown.js"></script>
