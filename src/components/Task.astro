@@ -1,5 +1,6 @@
 ---
 const { taskDescription, index } = Astro.props;
+const randomId = Math.random().toString(36).substring(10)
 ---
 
 <div
@@ -7,7 +8,7 @@ const { taskDescription, index } = Astro.props;
 >
   <input
     type="checkbox"
-    id=`checkbox${index}`
+    id=randomId
     class="flex items-center justify-center relative peer shrink-0
     appearance-none w-5 h-5 border-[.75px] border-hint rounded-full bg-white"
   />
@@ -29,28 +30,11 @@ const { taskDescription, index } = Astro.props;
       class="flex mix-blend-difference bg-negativeHint h-0 transition-all duration-200 translate-y-[2px]"
       id=`strikethrough${index}`
     >
-      <label id=`label${index}`
+      <label
+        id=randomId
         class="flex items-center text-negativeGeneral mix-blend-difference text-xl translate-y-[-2px]"
         >{taskDescription}</label
       >
     </div>
   </div>
 </div>
-
-<script define:vars={{ index }}>
-  const checkbox = document.getElementById(`checkbox${index}`);
-  const label = document.getElementById(`label${index}`)
-  const strikethrough = document.getElementById(`strikethrough${index}`)
-
-  checkbox.addEventListener("change", () => {
-    if (checkbox.checked) {
-      console.log()
-      strikethrough.style.height = '1px'
-      label.style.color = '#2f2f2f'
-    }
-    else {
-      strikethrough.style.height = '0'
-      label.style.color = '#d8dbdb'
-    }
-  });
-</script>
