@@ -11,12 +11,19 @@ document.addEventListener("change", (e) => {
   filterTasks(currentId);
 });
 
+// Checks if a new task has been added in the taskContainer and updates the filter in case that the currentId is showCompleted
+document.addEventListener("addedNewTask", () => {
+  if (currentId === "showCompleted") {
+    filterTasks(currentId);
+  }
+});
+
 // Event Listener for the filtering buttons in the cardFooter. Checks if the div that contains the buttons has been pressed
 document.getElementById("cardFooter").addEventListener("click", (e) => {
   // Check if the triggered event's target is a button
   if (e.target.matches("button")) {
     // Call the function that handles the possible buttons and passes the target's id
-    console.log(e.target.getAttribute("id"))
+    console.log(e.target.getAttribute("id"));
     filterTasks(e.target.getAttribute("id"));
   }
 });
@@ -30,8 +37,6 @@ document.getElementById("clearCompleted").addEventListener("click", () => {
     }
   }
 });
-
-
 
 // Takes the id of the that is now selected, resets the style of the three buttons and applies the selected style to the one that matches the id. Updates the value of the global variable 'currentId'
 const updateButtonsSytle = (selectedId) => {

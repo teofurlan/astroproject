@@ -1,10 +1,12 @@
 const dropdownCheckbox = document.getElementById("dropdown");
 
 dropdownCheckbox.addEventListener("change", () => {
+  const taskContainer = document.getElementById("taskContainer");
   if (dropdownCheckbox.checked) {
-    console.log("Open");
+    taskContainer.style.minHeight = "12rem";
   } else {
-    console.log("Close");
+    taskContainer.style.maxHeight = "0";
+    taskContainer.style.minHeight = "0";
   }
 });
 
@@ -19,11 +21,11 @@ document.getElementById("newTask").addEventListener("keypress", (event) => {
     // Resets the text input
     document.getElementById("newTask").value = "";
     // Dispatched event to check when a new task is added
-    document.dispatchEvent(new CustomEvent('addedNewTask'))
+    document.dispatchEvent(new CustomEvent("addedNewTask"));
   }
 });
 
-// Takes taskDescription (string) as parameter and returns the node that represents the Task.astro component with the taskDescription as content of its label 
+// Takes taskDescription (string) as parameter and returns the node that represents the Task.astro component with the taskDescription as content of its label
 const createNewTask = (taskDescription) => {
   // Selects the template that's used to create a new Task component and clones it
   const taskTemplate = document
@@ -33,9 +35,9 @@ const createNewTask = (taskDescription) => {
   // Makes it visible
   taskTemplate.style.display = "flex";
   // Removes the selectorClass that makes the filtering buttons ignore this template task
-  taskTemplate.classList.remove('template')
+  taskTemplate.classList.remove("template");
   // Add 'task' as its selectorClass so it is filtered by the buttons
-  taskTemplate.classList.add('task')
+  taskTemplate.classList.add("task");
   // Set new ids
   const newId = Math.random().toString(36).substring(7);
   taskTemplate.querySelector("input").id = `checkbox-${newId}`;
