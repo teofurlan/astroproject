@@ -4,12 +4,12 @@ const randomId = Math.random().toString(36).substring(7);
 ---
 
 <div
-  class="flex items-center gap-2 h-12 border-b bg-white border-hint pl-4 last-of-type:border-b-0 task"
+  class="flex items-center gap-2 h-12 border-b bg-white border-hint pl-4 task transition-all duration-500 overflow-hidden"
 >
   <input
     type="checkbox"
     id=`checkbox-${randomId}`
-    class="flex items-center justify-center relative peer shrink-0
+    class="checkbox flex items-center justify-center relative peer shrink-0
     appearance-none w-5 h-5 border-[.75px] border-hint rounded-full bg-white"
   />
   <svg
