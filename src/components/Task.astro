@@ -3,6 +3,7 @@ const {
   taskDescription,
   display = "flex",
   selectorClass = "task",
+  inputSelector = 'checkbox'
 } = Astro.props;
 const randomId = Math.random().toString(36).substring(7);
 ---
@@ -13,8 +14,8 @@ const randomId = Math.random().toString(36).substring(7);
   <input
     type="checkbox"
     id=`checkbox-${randomId}`
-    class="checkbox flex items-center justify-center relative peer shrink-0
-    appearance-none w-5 h-5 border-[.75px] border-hint rounded-full bg-white"
+    class=`${inputSelector} flex items-center justify-center relative peer shrink-0
+    appearance-none w-5 h-5 border-[.75px] border-hint rounded-full bg-white`
   />
   <svg
     class="absolute w-5 h-full p-[.18rem] mt-0.5 text-selected
