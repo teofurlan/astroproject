@@ -36,11 +36,12 @@ import Dropdown from "./Dropdown/Dropdown.astro";
     const strikethrough = document.getElementById(`strikethrough-${id}`);
     const label = document.getElementById(`label-${id}`);
     if (checkbox.checked) {
-      strikethrough.style.height = "1px";
-      label.style.color = "#2f2f2f";
+      label.style.textDecoration = 'line-through'
+      label.style.color = "#d0d0d0";
     } else {
-      strikethrough.style.height = "0";
-      label.style.color = "#d8dbdb";
+      label.style.textDecoration = 'none'
+      label.style.color = "#272424";
+
     }
   });
 </script>

@@ -1,5 +1,9 @@
 ---
-const { taskDescription, display = 'flex', selectorClass = 'task' } = Astro.props;
+const {
+  taskDescription,
+  display = "flex",
+  selectorClass = "task",
+} = Astro.props;
 const randomId = Math.random().toString(36).substring(7);
 ---
 
@@ -25,17 +29,10 @@ const randomId = Math.random().toString(36).substring(7);
   >
     <polyline points="20 6 9 17 4 12"></polyline>
   </svg>
-  <div class="flex items-center justify-center bg-white h-full">
-    <div
-      class="strikethrough flex mix-blend-difference bg-negativeHint h-0 transition-all duration-200 translate-y-[2px]"
-      id=`strikethrough-${randomId}`
-    >
-      <label
-        id=`label-${randomId}`
-        for=`checkbox-${randomId}`
-        class="flex items-center text-negativeGeneral mix-blend-difference text-xl translate-y-[-2px]"
-        >{taskDescription}</label
-      >
-    </div>
-  </div>
+  <label
+    id=`label-${randomId}`
+    for=`checkbox-${randomId}`
+    class="flex items-center ml-1 text-general font-medium text-xl h-full w-full"
+    >{taskDescription}</label
+  >
 </div>

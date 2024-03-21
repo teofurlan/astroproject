@@ -5,7 +5,7 @@ dropdownCheckbox.addEventListener("change", () => {
   if (dropdownCheckbox.checked) {
     taskContainer.style.minHeight = "12rem";
   } else {
-    taskContainer.style.maxHeight = "0";
+    // taskContainer.style.maxHeight = "0";
     taskContainer.style.minHeight = "0";
   }
 });
@@ -42,7 +42,6 @@ const createNewTask = (taskDescription) => {
   const newId = Math.random().toString(36).substring(7);
   taskTemplate.querySelector("input").id = `checkbox-${newId}`;
   taskTemplate.querySelector("label").id = `label-${newId}`;
-  taskTemplate.querySelector(".strikethrough").id = `strikethrough-${newId}`;
   // Set new task description
   taskTemplate.querySelector("label").innerHTML = taskDescription;
   return taskTemplate;
