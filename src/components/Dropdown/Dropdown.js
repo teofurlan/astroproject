@@ -7,3 +7,9 @@ dropdownCheckbox.addEventListener("change", () => {
     console.log("Close");
   }
 });
+
+document.getElementById('newTask').addEventListener('keypress', (event) => {
+  if (event.key === 'Enter') {
+    console.log('added new task!')
+  }
+})
