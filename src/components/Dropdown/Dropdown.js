@@ -18,6 +18,8 @@ document.getElementById("newTask").addEventListener("keypress", (event) => {
       .appendChild(createNewTask(document.getElementById("newTask").value));
     // Resets the text input
     document.getElementById("newTask").value = "";
+    // Dispatched event to check when a new task is added
+    document.dispatchEvent(new CustomEvent('addedNewTask'))
   }
 });
 
