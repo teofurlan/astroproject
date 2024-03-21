@@ -9,6 +9,7 @@ document.addEventListener("change", (e) => {
     return;
   }
   filterTasks(currentId);
+  setItemsCounter()
 });
 
 // Checks if a new task has been added in the taskContainer and updates the filter in case that the currentId is showCompleted
@@ -16,6 +17,7 @@ document.addEventListener("addedNewTask", () => {
   if (currentId === "showCompleted") {
     filterTasks(currentId);
   }
+  setItemsCounter()
 });
 
 // Event Listener for the filtering buttons in the cardFooter. Checks if the div that contains the buttons has been pressed
@@ -30,6 +32,7 @@ document.getElementById("cardFooter").addEventListener("click", (e) => {
 
 document.getElementById("clearCompleted").addEventListener("click", () => {
   console.log("clear completed");
+  
   let tasks = document.getElementsByClassName("task");
   for (let i = tasks.length - 1; i >= 0; i--) {
     if (tasks[i].getElementsByTagName("input")[0].checked) {
@@ -137,5 +140,11 @@ const setShowCompleted = () => {
   }
 };
 
+const setItemsCounter = () => {
+  console.log('called')
+  document.getElementById('itemsCounter').innerHTML = `${Array.from(document.getElementsByClassName('checkbox')).filter(element => !element.checked).length} items left`
+}
+
 // Initial call to the function to set the default selected button to showAll
 updateButtonsSytle(currentId);
+setItemsCounter()
