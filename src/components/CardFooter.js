@@ -3,6 +3,7 @@ const showActiveButton = document.getElementById("showActive");
 const showCompletedButton = document.getElementById("showCompleted");
 let currentId = showAllButton.id;
 
+// Updates the filters if a change is made in the checkboxes
 document.addEventListener("change", (e) => {
   if (!e.target.matches(".checkbox")) {
     return;
@@ -10,12 +11,29 @@ document.addEventListener("change", (e) => {
   filterTasks(currentId);
 });
 
+// Event Listener for the filtering buttons in the cardFooter. Checks if the div that contains the buttons has been pressed
 document.getElementById("cardFooter").addEventListener("click", (e) => {
+  // Check if the triggered event's target is a button
   if (e.target.matches("button")) {
+    // Call the function that handles the possible buttons and passes the target's id
+    console.log(e.target.getAttribute("id"))
     filterTasks(e.target.getAttribute("id"));
   }
 });
 
+document.getElementById("clearCompleted").addEventListener("click", () => {
+  console.log("clear completed");
+  let tasks = document.getElementsByClassName("task");
+  for (let i = tasks.length - 1; i >= 0; i--) {
+    if (tasks[i].getElementsByTagName("input")[0].checked) {
+      tasks[i].remove();
+    }
+  }
+});
+
+
+
+// Takes the id of the that is now selected, resets the style of the three buttons and applies the selected style to the one that matches the id. Updates the value of the global variable 'currentId'
 const updateButtonsSytle = (selectedId) => {
   document
     .getElementById("cardFooter")
@@ -27,6 +45,7 @@ const updateButtonsSytle = (selectedId) => {
   currentId = selectedId;
 };
 
+// Based on the button's id that's passed as a parameted, executes the corresponding action. Calls updateButtonSytle()
 const filterTasks = (buttonId) => {
   switch (buttonId) {
     case "showAll":
@@ -51,10 +70,9 @@ const setShowAll = () => {
       setTimeout(() => {
         tasks[i].style.transform = "translateX(0)";
       }, 200);
-    }
-    else {
+    } else {
       if (currentId === "showCompleted") {
-        tasks[i].style.transform = "translateX(100%)"
+        tasks[i].style.transform = "translateX(100%)";
         setTimeout(() => {
           tasks[i].style.transform = "translateX(0)";
         }, 200);
@@ -62,6 +80,7 @@ const setShowAll = () => {
     }
   }
 };
+
 const setShowActive = () => {
   let tasks = document.getElementsByClassName("task");
   for (let i = 0; i < tasks.length; i++) {
@@ -74,7 +93,6 @@ const setShowActive = () => {
     } else {
       if (currentId === "showAll") {
       } else if (currentId === "showCompleted") {
-        tasks[i].style.transform = "translateX(-100%)";
         tasks[i].style.display = "flex";
         setTimeout(() => {
           tasks[i].style.transform = "translateX(0)";
@@ -83,6 +101,7 @@ const setShowActive = () => {
     }
   }
 };
+
 const setShowCompleted = () => {
   let tasks = document.getElementsByClassName("task");
   for (let i = 0; i < tasks.length; i++) {
