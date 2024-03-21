@@ -4,16 +4,19 @@ import CardFooter from "./CardFooter.astro";
 import Dropdown from "./Dropdown/Dropdown.astro";
 ---
 
-<section class="flex flex-col items-center w-[800px] drop-shadow-2xl transition-width">
+<section
+  class="flex flex-col items-center w-[800px] drop-shadow-2xl transition-width"
+>
   <div class="w-full border border-hint border-s-hint">
     <Dropdown text={"What needs to be done?"} />
-    <div class="w-full min-h-[12rem] bg-white overflow-hidden transition-width">
+    <div
+      class="w-full min-h-[12rem] bg-white overflow-hidden transition-width"
+      id="taskContainer"
+    >
+      <Task taskDescription="" display="hidden" selectorClass="template" />
       <Task taskDescription="Go Shoping" />
       <Task taskDescription="Refactor Backend" />
       <Task taskDescription="Add new feature to app" />
-      <Task taskDescription="Todo1" />
-      <Task taskDescription="Todo1" />
-      <Task taskDescription="Todo1" />
     </div>
     <CardFooter intemsLeft={3} />
   </div>
@@ -28,6 +31,7 @@ import Dropdown from "./Dropdown/Dropdown.astro";
       return;
     }
     const id = e.target.getAttribute("id").split("-")[1];
+    console.log("checkbox checked " + id);
     const checkbox = document.getElementById(`checkbox-${id}`);
     const strikethrough = document.getElementById(`strikethrough-${id}`);
     const label = document.getElementById(`label-${id}`);

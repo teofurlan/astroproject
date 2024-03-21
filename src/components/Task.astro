@@ -1,10 +1,10 @@
 ---
-const { taskDescription} = Astro.props;
+const { taskDescription, display = 'flex', selectorClass = 'task' } = Astro.props;
 const randomId = Math.random().toString(36).substring(7);
 ---
 
 <div
-  class="flex items-center gap-2 h-12 border-b bg-white border-hint pl-4 task transition-all duration-700 overflow-hidden"
+  class=`${display} items-center gap-2 h-12 border-b bg-white border-hint pl-4 transition-all duration-700 overflow-hidden ${selectorClass}`
 >
   <input
     type="checkbox"
@@ -27,7 +27,7 @@ const randomId = Math.random().toString(36).substring(7);
   </svg>
   <div class="flex items-center justify-center bg-white h-full">
     <div
-      class="flex mix-blend-difference bg-negativeHint h-0 transition-all duration-200 translate-y-[2px]"
+      class="strikethrough flex mix-blend-difference bg-negativeHint h-0 transition-all duration-200 translate-y-[2px]"
       id=`strikethrough-${randomId}`
     >
       <label
