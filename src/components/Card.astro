@@ -4,10 +4,10 @@ import CardFooter from "./CardFooter.astro";
 import Dropdown from "./Dropdown/Dropdown.astro";
 ---
 
-<section class="flex flex-col items-center w-[800px] drop-shadow-2xl">
+<section class="flex flex-col items-center w-[800px] drop-shadow-2xl transition-width">
   <div class="w-full border border-hint border-s-hint">
     <Dropdown text={"What needs to be done?"} />
-    <div class="w-full min-h-[12rem] bg-white">
+    <div class="w-full min-h-[12rem] bg-white overflow-hidden transition-width">
       <Task taskDescription="Go Shoping" />
       <Task taskDescription="Refactor Backend" />
       <Task taskDescription="Add new feature to app" />

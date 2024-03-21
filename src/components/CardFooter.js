@@ -11,7 +11,9 @@ document.addEventListener("change", (e) => {
 });
 
 document.getElementById("cardFooter").addEventListener("click", (e) => {
-  filterTasks(e.target.getAttribute("id"));
+  if (e.target.matches("button")) {
+    filterTasks(e.target.getAttribute("id"));
+  }
 });
 
 const updateButtonsSytle = (selectedId) => {
@@ -44,6 +46,20 @@ const setShowAll = () => {
   let tasks = document.getElementsByClassName("task");
   for (let i = 0; i < tasks.length; i++) {
     tasks[i].style.display = "flex";
+    if (tasks[i].getElementsByTagName("input")[0].checked) {
+      tasks[i].style.display = "flex";
+      setTimeout(() => {
+        tasks[i].style.transform = "translateX(0)";
+      }, 200);
+    }
+    else {
+      if (currentId === "showCompleted") {
+        tasks[i].style.transform = "translateX(100%)"
+        setTimeout(() => {
+          tasks[i].style.transform = "translateX(0)";
+        }, 200);
+      }
+    }
   }
 };
 const setShowActive = () => {
@@ -51,14 +67,19 @@ const setShowActive = () => {
   for (let i = 0; i < tasks.length; i++) {
     let checkbox = tasks[i].getElementsByTagName("input")[0];
     if (checkbox.checked) {
-      tasks[i].style.maxHeight = "0";
+      tasks[i].style.transform = "translateX(100%)";
       setTimeout(() => {
         tasks[i].style.display = "none";
-        tasks[i].
-      }, 500);
+      }, 200);
     } else {
-      // tasks[i].style.display = "flex";
-      tasks[i].style.maxHeight = "3rem";
+      if (currentId === "showAll") {
+      } else if (currentId === "showCompleted") {
+        tasks[i].style.transform = "translateX(-100%)";
+        tasks[i].style.display = "flex";
+        setTimeout(() => {
+          tasks[i].style.transform = "translateX(0)";
+        }, 200);
+      }
     }
   }
 };
@@ -67,11 +88,30 @@ const setShowCompleted = () => {
   for (let i = 0; i < tasks.length; i++) {
     let checkbox = tasks[i].getElementsByTagName("input")[0];
     if (!checkbox.checked) {
-      tasks[i].style.display = "none";
+      if (currentId === "showAll") {
+        tasks[i].style.transform = "translateX(-100%)";
+        setTimeout(() => {
+          tasks[i].style.display = "none";
+        }, 200);
+      } else {
+        tasks[i].style.display = "none";
+      }
     } else {
-      tasks[i].style.display = "flex";
+      if (currentId === "showAll") {
+        tasks[i].style.display = "flex";
+        tasks[i].style.transform = "translateX(0)";
+      } else if (currentId === "showActive") {
+        tasks[i].style.display = "none";
+        tasks[i].style.transform = "translateX(-100%)";
+
+        tasks[i].style.display = "flex";
+        setTimeout(() => {
+          tasks[i].style.transform = "translateX(0)";
+        }, 200);
+      }
     }
   }
 };
 
+// Initial call to the function to set the default selected button to showAll
 updateButtonsSytle(currentId);

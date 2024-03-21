@@ -4,7 +4,7 @@ const randomId = Math.random().toString(36).substring(7);
 ---
 
 <div
-  class="flex items-center gap-2 h-12 border-b bg-white border-hint pl-4 task transition-all duration-500 overflow-hidden"
+  class="flex items-center gap-2 h-12 border-b bg-white border-hint pl-4 task transition-all duration-700 overflow-hidden"
 >
   <input
     type="checkbox"
@@ -13,8 +13,8 @@ const randomId = Math.random().toString(36).substring(7);
     appearance-none w-5 h-5 border-[.75px] border-hint rounded-full bg-white"
   />
   <svg
-    class="absolute w-5 h-5 p-[.18rem] mt-0.5 text-selected
-      max-w-0 peer-checked:max-w-5 pointer-events-none peer-checked:transition-all peer-checked:duration-300"
+    class="absolute w-5 h-full p-[.18rem] mt-0.5 text-selected
+      max-w-0 peer-checked:max-w-5 pointer-events-none peer-checked:transition-all peer-checked:duration-300 transition-all duration-200"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
     fill="none"
