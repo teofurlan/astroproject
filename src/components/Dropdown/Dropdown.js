@@ -2,10 +2,10 @@ const dropdownCheckbox = document.getElementById("dropdown");
 
 dropdownCheckbox.addEventListener("click", () => {
   const tasksContainer = document.getElementById("tasksContainer");
+  tasksContainer.parentNode.querySelector("span")?.remove();
   if (dropdownCheckbox.checked) {
     tasksContainer.style.minHeight = "12rem";
     tasksContainer.style.maxHeight = "100%";
-    tasksContainer.parentNode.querySelector("span")?.remove();
   } else {
     tasksContainer.style.maxHeight = "0";
     tasksContainer.style.minHeight = "0";
@@ -23,22 +23,22 @@ document.getElementById("newTask").addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
     // Adds the new task component to the tasksContainer inside the Card
-    const task = createNewTask(document.getElementById("newTask").value)
+    const task = createNewTask(document.getElementById("newTask").value);
     if (task) {
-    document
-      .getElementById("tasksContainer")
-      .appendChild(task);
-    // Resets the text input
-    document.getElementById("newTask").value = "";
-    // Dispatched event to check when a new task is added
-    document.dispatchEvent(new CustomEvent("addedNewTask"));
+      document.getElementById("tasksContainer").appendChild(task);
+      // Resets the text input
+      document.getElementById("newTask").value = "";
+      // Dispatched event to check when a new task is added
+      document.dispatchEvent(new CustomEvent("addedNewTask"));
     }
   }
 });
 
 // Takes taskDescription (string) as parameter and returns the node that represents the Task.astro component with the taskDescription as content of its label
 const createNewTask = (taskDescription) => {
-  if (taskDescription === '') { return }
+  if (taskDescription === "") {
+    return;
+  }
   // Selects the template that's used to create a new Task component and clones it
   const taskTemplate = document
     .getElementById("tasksContainer")

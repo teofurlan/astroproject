@@ -3,7 +3,6 @@ document.addEventListener("change", (e) => {
       return;
     }
     const id = e.target.getAttribute("id").split("-")[1];
-    console.log("checkbox checked " + id);
     const checkbox = document.getElementById(`checkbox-${id}`);
     const label = document.getElementById(`label-${id}`);
     if (checkbox.checked) {
