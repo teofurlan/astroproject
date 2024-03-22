@@ -29,7 +29,7 @@ document.getElementById("newTask").addEventListener("keypress", (event) => {
       // Resets the text input
       document.getElementById("newTask").value = "";
       // Dispatched event to check when a new task is added
-      document.dispatchEvent(new CustomEvent("addedNewTask"));
+      document.dispatchEvent(new CustomEvent("addedNewTask"), { detail: task});
     }
   }
 });
