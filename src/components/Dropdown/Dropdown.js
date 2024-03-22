@@ -29,7 +29,7 @@ document.getElementById("newTask").addEventListener("keypress", (event) => {
       // Resets the text input
       document.getElementById("newTask").value = "";
       // Dispatched event to check when a new task is added
-      document.dispatchEvent(new CustomEvent("addedNewTask"), { detail: task});
+      document.dispatchEvent(new CustomEvent("addedNewTask", { detail: { element: task }}));
     }
   }
 });
@@ -56,6 +56,7 @@ const createNewTask = (taskDescription) => {
   // Set new ids
   const newId = Math.random().toString(36).substring(7);
   taskTemplate.querySelector("input").id = `checkbox-${newId}`;
+  taskTemplate.querySelector("label").htmlFor = `checkbox-${newId}`;
   taskTemplate.querySelector("label").id = `label-${newId}`;
   // Set new task description
   taskTemplate.querySelector("label").innerHTML = taskDescription;
