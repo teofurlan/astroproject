@@ -1,12 +1,20 @@
 const dropdownCheckbox = document.getElementById("dropdown");
 
-dropdownCheckbox.addEventListener("change", () => {
-  const taskContainer = document.getElementById("taskContainer");
+dropdownCheckbox.addEventListener("click", () => {
+  const tasksContainer = document.getElementById("tasksContainer");
   if (dropdownCheckbox.checked) {
-    taskContainer.style.minHeight = "12rem";
+    tasksContainer.style.minHeight = "12rem";
+    tasksContainer.style.maxHeight = "100%";
+    tasksContainer.parentNode.querySelector("span")?.remove();
   } else {
-    // taskContainer.style.maxHeight = "0";
-    taskContainer.style.minHeight = "0";
+    tasksContainer.style.maxHeight = "0";
+    tasksContainer.style.minHeight = "0";
+    const span = document.createElement("span");
+    span.classList = "m-auto text-hint";
+    span.textContent = "The task list is closed".toUpperCase();
+    setTimeout(() => {
+      tasksContainer.parentNode.appendChild(span);
+    }, 400);
   }
 });
 
@@ -14,22 +22,26 @@ dropdownCheckbox.addEventListener("change", () => {
 document.getElementById("newTask").addEventListener("keypress", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
-    // Adds the new task component to the taskContainer inside the Card
+    // Adds the new task component to the tasksContainer inside the Card
+    const task = createNewTask(document.getElementById("newTask").value)
+    if (task) {
     document
-      .getElementById("taskContainer")
-      .appendChild(createNewTask(document.getElementById("newTask").value));
+      .getElementById("tasksContainer")
+      .appendChild(task);
     // Resets the text input
     document.getElementById("newTask").value = "";
     // Dispatched event to check when a new task is added
     document.dispatchEvent(new CustomEvent("addedNewTask"));
+    }
   }
 });
 
 // Takes taskDescription (string) as parameter and returns the node that represents the Task.astro component with the taskDescription as content of its label
 const createNewTask = (taskDescription) => {
+  if (taskDescription === '') { return }
   // Selects the template that's used to create a new Task component and clones it
   const taskTemplate = document
-    .getElementById("taskContainer")
+    .getElementById("tasksContainer")
     .querySelector(".template")
     .cloneNode(true);
   // Makes it visible
