@@ -9,12 +9,12 @@ document.addEventListener("change", (e) => {
     return;
   }
   filterTasks(currentId);
-  setItemsCounter()
+  setItemsCounter();
 });
 
 // Checks if a new task has been added in the taskContainer and updates the filter in case that the currentId is showCompleted
 document.addEventListener("addedNewTask", () => {
-  setItemsCounter()
+  setItemsCounter();
   if (currentId === "showCompleted") {
     filterTasks(currentId);
   }
@@ -31,13 +31,7 @@ document.getElementById("cardFooter").addEventListener("click", (e) => {
 
 document.getElementById("clearCompleted").addEventListener("click", () => {
   console.log("clear completed");
-  
-  let tasks = document.getElementsByClassName("task");
-  for (let i = tasks.length - 1; i >= 0; i--) {
-    if (tasks[i].getElementsByTagName("input")[0].checked) {
-      tasks[i].remove();
-    }
-  }
+  displayConfirmation();
 });
 
 // Takes the id of the that is now selected, resets the style of the three buttons and applies the selected style to the one that matches the id. Updates the value of the global variable 'currentId'
@@ -140,9 +134,51 @@ const setShowCompleted = () => {
 };
 
 const setItemsCounter = () => {
-  document.getElementById('itemsCounter').innerHTML = `${Array.from(document.getElementsByClassName('checkbox')).filter(element => !element.checked).length} items left`
-}
+  document.getElementById("itemsCounter").innerHTML = `${
+    Array.from(document.getElementsByClassName("checkbox")).filter(
+      (element) => !element.checked
+    ).length
+  } items left`;
+};
+
+const displayConfirmation = () => {
+  let container = document.createElement("div");
+  container.classList =
+    "flex items-center justify-center absolute h-screen w-screen bg-black bg-opacity-50";
+  container.id = "confirmationMenu";
+
+  let confirmationNodes =
+    '<div class="flex flex-col items-center justify-between w-80 h-52 p-5 border bg-white rounded-md relative" >' +
+    '<span class="text-general text-base text-center my-5">All completed tasks will be deleted. Do you want to continue?</span>' +
+    '<img src="thinking-flork.png" alt="thinking flork" class="absolute top-[-2.5rem] left-8 w-10">' +
+    '<div class="flex items-center justify-between w-4/5" id="buttonsContainer">' +
+    '<button class="w-24 h-10 border border-hint bg-white text-base hover:drop-shadow-lg rounded-md" id="accept">Accept</button>' +
+    '<button class="w-24 h-10 border border-hint bg-white text-base hover:drop-shadow-lg rounded-md" id="cancel">Cancel</button>' +
+    "</div>" +
+    "<div>";
+  container.innerHTML = confirmationNodes;
+  document.querySelector("body").appendChild(container);
+  document.getElementById("buttonsContainer").addEventListener("click", (e) => {
+    switch (true) {
+      case e.target.matches("#accept"):
+        let tasks = document.getElementsByClassName("task");
+        for (let i = tasks.length - 1; i >= 0; i--) {
+          if (tasks[i].getElementsByTagName("input")[0].checked) {
+            tasks[i].remove();
+          }
+        }
+        container.remove();
+        break;
+      case e.target.matches("#cancel"):
+        container.remove();
+        break;
+      default:
+        break;
+    }
+  });
+  console.log("here", document.querySelector("overlay"));
+};
 
 // Initial call to the function to set the default selected button to showAll
 updateButtonsSytle(currentId);
-setItemsCounter()
+setItemsCounter();
