@@ -36,8 +36,11 @@ const createNewTask = (taskDescription) => {
   taskTemplate.style.display = "flex";
   // Removes the selectorClass that makes the filtering buttons ignore this template task
   taskTemplate.classList.remove("template");
+  taskTemplate.classList.remove("hidden");
   // Add 'task' as its selectorClass so it is filtered by the buttons
   taskTemplate.classList.add("task");
+  taskTemplate.classList.add("flex");
+  taskTemplate.querySelector("input").classList.add("checkbox");
   // Set new ids
   const newId = Math.random().toString(36).substring(7);
   taskTemplate.querySelector("input").id = `checkbox-${newId}`;

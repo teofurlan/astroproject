@@ -1,0 +1,27 @@
+---
+import Task from "../Task/Task.astro";
+import CardFooter from "../CardFooter/CardFooter.astro";
+import Dropdown from "../Dropdown/Dropdown.astro";
+---
+
+<section
+  class="flex flex-col items-center w-[800px] drop-shadow-2xl transition-width"
+>
+  <div class="flex flex-col justify-between w-full border bg-white border-hint border-s-hint min-h-[18.5rem]">
+    <Dropdown text={"What needs to be done?"} />
+    <div
+      class="w-full min-h-[12rem] bg-white overflow-hidden transition-width"
+      id="taskContainer"
+    >
+      <Task taskDescription="" display="hidden" selectorClass="template" inputSelector=""/>
+      <Task taskDescription="Go Shoping" />
+      <Task taskDescription="Refactor Backend" />
+      <Task taskDescription="Add new feature to app" />
+    </div>
+    <CardFooter/>
+  </div>
+  <div class="w-[87%] h-2.5 shadow-md bg-white z-30"></div>
+  <div class="w-[83%] h-2.5 shadow-md bg-white z-20"></div>
+</section>
+
+<script src="./Card.js"></script>

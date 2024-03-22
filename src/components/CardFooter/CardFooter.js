@@ -14,10 +14,10 @@ document.addEventListener("change", (e) => {
 
 // Checks if a new task has been added in the taskContainer and updates the filter in case that the currentId is showCompleted
 document.addEventListener("addedNewTask", () => {
+  setItemsCounter()
   if (currentId === "showCompleted") {
     filterTasks(currentId);
   }
-  setItemsCounter()
 });
 
 // Event Listener for the filtering buttons in the cardFooter. Checks if the div that contains the buttons has been pressed
@@ -25,7 +25,6 @@ document.getElementById("cardFooter").addEventListener("click", (e) => {
   // Check if the triggered event's target is a button
   if (e.target.matches("button")) {
     // Call the function that handles the possible buttons and passes the target's id
-    console.log(e.target.getAttribute("id"));
     filterTasks(e.target.getAttribute("id"));
   }
 });
@@ -141,7 +140,6 @@ const setShowCompleted = () => {
 };
 
 const setItemsCounter = () => {
-  console.log('called')
   document.getElementById('itemsCounter').innerHTML = `${Array.from(document.getElementsByClassName('checkbox')).filter(element => !element.checked).length} items left`
 }
 
