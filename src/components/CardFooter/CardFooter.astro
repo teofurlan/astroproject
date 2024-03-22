@@ -1,11 +1,9 @@
----
-const { intemsLeft } = Astro.props;
----
+
 
 <div
   class="flex w-full bg-white h-10 items-center justify-between flex-row text-xs text-statusbar p-1.5"
 >
-  <span class="flex" id="itemsCounter">{intemsLeft} items left</span>
+  <span class="flex" id="itemsCounter"></span>
   <div class="flex items-center justify-between w-52 h-full" id="cardFooter">
     <button 
       class="p-[.4rem] pl-3 pr-3 rounded-[.20rem] hover:text-shadown hover:translate-x-[.4px] hover:translate-y-[-.4px] hover:[text-shadow:_0_.4px_0_rgb(0_0_0_/_30%)]"
