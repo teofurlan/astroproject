@@ -11,6 +11,7 @@ const randomId = Math.random().toString(36).substring(7);
 <div
   class=`${display} items-center gap-2 h-12 border-b bg-white border-hint pl-4 transition-all transition-transform duration-700 overflow-hidden ${selectorClass}`
 >
+<div class="relative flex items-center justify-center">
   <input
     type="checkbox"
     id=`checkbox-${randomId}`
@@ -18,7 +19,7 @@ const randomId = Math.random().toString(36).substring(7);
     appearance-none w-5 h-5 border-[.75px] border-hint rounded-full bg-white`
   />
   <svg
-    class="absolute w-5 h-full p-[.18rem] mt-0.5 text-selected
+    class="absolute w-5 h-full p-[.18rem] text-selected
       max-w-0 peer-checked:max-w-5 pointer-events-none peer-checked:transition-all peer-checked:duration-300 transition-all duration-200"
     xmlns="http://www.w3.org/2000/svg"
     viewBox="0 0 24 24"
@@ -30,6 +31,7 @@ const randomId = Math.random().toString(36).substring(7);
   >
     <polyline points="20 6 9 17 4 12"></polyline>
   </svg>
+  </div>
   <label
     id=`label-${randomId}`
     for=`checkbox-${randomId}`
