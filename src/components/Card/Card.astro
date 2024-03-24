@@ -11,7 +11,7 @@ import Dropdown from "../Dropdown/Dropdown.astro";
     class="flex flex-col justify-between w-full border bg-white border-hint border-s-hint"
   >
     <Dropdown text={"What needs to be done?"} />
-    <div class="flex flex-col min-h-48 transition-all duration-1000">
+    <div class="flex flex-col min-h-48 transition-all duration-1000 relative">
       <div
         class="w-full min-h-[12rem] bg-white overflow-hidden transition-all duration-500"
         id="tasksContainer"
@@ -25,6 +25,7 @@ import Dropdown from "../Dropdown/Dropdown.astro";
         <Task taskDescription="Go Shoping" />
         <Task taskDescription="Refactor Backend" />
         <Task taskDescription="Add new feature to app" />
+        <Task taskDescription="Fix overlay" />
       </div>
     </div>
     <CardFooter />
