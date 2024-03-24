@@ -259,8 +259,8 @@ const displayConfirmation = () => {
   // Creates the container of the confirmation menu
   let container = document.createElement("div");
   // Uses tailwind classes to give it an overlay appearance over the whole viewport
-  container.classList =
-    "flex items-center justify-center absolute m-0 h-screen w-screen bg-black bg-opacity-50";
+  container.classList = 
+    "flex items-center justify-center fixed m-0 h-full w-screen bg-black bg-opacity-50";
 
   // Stores all the html content of the menu in a string, along side with their styles modified using talwind as well
   let confirmationNodes =
