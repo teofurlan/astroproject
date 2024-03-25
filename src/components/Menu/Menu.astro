@@ -1,11 +1,11 @@
 ---
-import './Menu.css'
+import "./Menu.css";
 ---
 
 <div class="menu">
-  <button class="menu-open-button" id="menuDisplayButton">
+  <button class="menu__button" id="menuButton">
     <svg
-      class="menu-icon"
+      class="menu__button__icon"
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
       height="1em"
@@ -18,32 +18,28 @@ import './Menu.css'
         clip-rule="evenodd"></path>
     </svg>
   </button>
-  <ul class="menu-options__closed" id="optionsContainer">
-    <li>
-      <button class="menu-options-button" id="test">
-        <h3>Test</h3>
-        <span>10 sec</span>
+  <div class="main-menu__container" id="Menu">
+    <div class="main-menu" id="mainMenu">
+      <button class="main-menu__button" id="timeButton">
+        <p class="menu__text" >Time</p>
+        <span>&gt;</span>
       </button>
-    </li>
-    <li>
-      <button class="menu-options-button" id="normal">
-        <h3>Normal</h3>
-        <span>20 min</span>
+      <button class="main-menu__button">
+        <p class="menu__text">Alarm</p>
+        <span>&gt;</span>
       </button>
-    </li>
-    <li>
-      <button class="menu-options-button" id="medium">
-        <h3>Medium</h3>
-        <span>45 min</span>
+      <button class="main-menu__button">
+        <p class="menu__text">Option</p>
+        <span>&gt;</span>
       </button>
-    </li>
-    <li>
-      <button class="menu-options-button" id="extended">
-        <h3>Extended</h3>
-        <span>60 min</span>
-      </button>
-    </li>
-  </ul>
+    </div>
+    <div class="time-menu" id="timeMenu">
+      <button class="time-menu__button" id="test"><p class="menu__text">Test</p><span class="menu__subtext">6s 2s 3s</span></button>
+      <button class="time-menu__button"><p class="menu__text">Normal</p><span class="menu__subtext">20m 5m 8m</span></button>
+      <button class="time-menu__button"><p class="menu__text">Medium</p><span class="menu__subtext">40m 8m 15m</span></button>
+      <button class="time-menu__button"><p class="menu__text">Extended</p><span class="menu__subtext">60m 10m 25m</span></button>
+    </div>
+  </div>
 </div>
 
 <script src="./Menu.js"></script>
