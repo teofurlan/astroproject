@@ -37,3 +37,10 @@ export async function toggleTask(id: string) {
     return task
 }
 
+export async function showServerList() {
+    for (let i in tasksList)
+    {
+        console.log(tasksList[i])
+    }
+} 
+
