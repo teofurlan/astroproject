@@ -2,6 +2,9 @@
  * GLOBAL VARIABLES
  */
 // Lists to store which of the tasks are completed (its checkbox.checked is true) and which not. This approach can seem redundant, given the tasks list can be accessed any time through the taskContainer and every tasks needs to pass through a loop for filtering. However, this way we are saving the resourses needed to check whether its checkbox is checked or not and also avoid to query the documents too many times. In addition, storing them into js arrays allow us to use a number of useful methods.
+
+import { createNewTask } from "../Dropdown/Dropdown";
+
 // Both lists will be updated each time a tasks is checked or unchecked and when the. The activeTasks will aslo be updated when a new task is created and. The completedTasks is cleared when the Clear Completed option is selected
 let activeTasks = Array.from(document.querySelectorAll(".task"));
 let completedTasks = [];
@@ -9,6 +12,14 @@ let completedTasks = [];
 let currentId = "showAll";
 // Stores the span with a label that is displayed in the background in case that there are no tasks in that filtering section
 let advice;
+
+fetch('/api/tasks').then(r => r.json()).then(data => {
+  const tasksList = data.tasksList
+  // activeTasks
+  activeTasks = Array.from(tasksList.map(task => new createNewTask(task.description, task.id, task.completed)))
+  console.log(activeTasks)
+})
+
 
 /**
  * EVENT LISTENERS
