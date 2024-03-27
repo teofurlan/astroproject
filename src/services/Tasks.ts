@@ -1,18 +1,10 @@
-
 type Task = {
   id: string;
   description: string;
   completed: boolean;
 };
 
-let tasksList:Task[]
-// let tasksList: Task[] = [
-//   { id: "93u66", description: "Go Shoping", completed: false },
-//   { id: "6082mf", description: "Refactor Backend", completed: false },
-//   { id: "atbqg", description: "Add new feature to app", completed: false },
-//   { id: "fasdg", description: "Add a database", completed: false },
-// ];
-
+let tasksList:Task[] 
 
 export async function getTasksList() {
   return tasksList;
@@ -35,12 +27,12 @@ export async function deleteCompletedtasksList() {
 }
 
 export async function toggleTask(id: string) {
-  const task = tasksList.find((element) => element.id === id);
-  if (!task) {
-    return;
-  }
-  task.completed = !task.completed;
-  return task;
+  // const task = tasksList.find((element) => element.id === id);
+  // if (!task) {
+  //   return;
+  // }
+  // task.completed = !task.completed;
+  // return task;
 }
 
 export async function showServerList() {

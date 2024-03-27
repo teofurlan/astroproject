@@ -1,10 +1,12 @@
-import { getTasksList } from "../../services/Tasks";
+import type { APIContext } from "astro";
+// import { getTasksList } from "../../services/Tasks";
 import {
   addTask,
   getTasks,
   updateTask,
-  deleteTask,
+  deleteCompletedTasks,
 } from "../../services/database";
+import Datastore from "nedb-promises";
 
 export async function GET() {
   // const tasksList = await getTasksList()
@@ -16,16 +18,21 @@ export async function GET() {
   }
 }
 
-export async function POST(req: Request) {
+export async function POST(context: APIContext) {
   try {
-    const { description, completed } = await req.json();
+    const { description, completed } = await context.request.json();
     const newTask = await addTask(description, completed);
-    return new Response(JSON.stringify({ newTask }), { status: 201 });
+    return new Response(JSON.stringify({ newTask }));
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
     });
   }
+}
+
+export async function DELETE(context: APIContext) {
+  deleteCompletedTasks()
+  return new Response(JSON.stringify({}))
 }
 
 // export async function GET() {

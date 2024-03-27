@@ -5,16 +5,17 @@ import {
   toggleTask,
 } from "../../services/Tasks";
 
+// SWApi -> hacer listado de de recursos con un botton que diga cargar mas lleve a una pa
+
 // Makes a request to the server side to get the list of tasks. Uses the .then() function to handle the promise that's returned by the
 fetch("/api/tasks")
-  .then((r) => r.json())
+  .then((response) => response.json())
   .then((data) => {
     // Get the list of tasks from the promise
     const tasksList = data.tasksList;
-    console.log(tasksList)
     // Creates the tasks in the document from the list of tasks in the server
     for (let task of tasksList) {
-      createNewTask(task)
+      createNewTask(task);
     }
     // Set the initial filter so the logic works correctly
     filterTasks("showAll");
@@ -32,11 +33,10 @@ window.onload = () => {
   const showAllButton = document.getElementById("showAll");
   showAllButton.dataset.selected = "true";
   showAllButton.style.border = "1.5px solid #f5e4e4";
-
 };
 
 // Checks if a task checkbox has been checked or unchecked to change its style. Updates activeTaks and completedTasks lists
-document.addEventListener("change", (event) => {
+document.addEventListener("change", async (event) => {
   const currentFilterId = getCurrentFilterId();
   // First, we check if the change event in the document was trigger by pressing the dropdown
   if (event.target.matches("#dropdown")) {
@@ -59,6 +59,12 @@ document.addEventListener("change", (event) => {
   const label = document.getElementById(
     `label-${checkbox.getAttribute("id").split("-")[1]}`
   );
+
+  const response = await fetch(
+    `/api/tasks/${checkbox.getAttribute("id").split("-")[1]}`,
+    { method: "PATCH", body: JSON.stringify({}) }
+  );
+
   // Add text-decoration and changes the label color so it has the crossed out style or removes this classes, therefore the styles, from the label classList if already have them
   label.classList.toggle("line-through");
   label.classList.toggle("text-hint");
@@ -78,16 +84,14 @@ document
   .getElementById("textInput")
   .addEventListener("addedNewTask", async (event) => {
     // const task = createNewTask(event.detail);
-    const newTask = await createTask(event.detail);
+    // const newTask = await createTask(event.detail);
+    const description = event.detail;
+    const response = await fetch("/api/tasks", {
+      method: "POST",
+      body: JSON.stringify({ description, completed: false }),
+    });
+    const { newTask } = await response.json();
     createNewTask(newTask);
-    // .then((taskElement) => {
-    //   console.log(taskElement);
-    //   // if (taskElement) {
-    //   document.getElementById("tasksContainer").appendChild(taskElement);
-    //   console.log("Server List");
-    //   showServerList();
-    //   // }
-    // });
     // Updates the items counter
     setItemsCounter();
     // Checks if a new task has been added in the taskContainer and updates the filter in case that the currentId is showCompleted. By validating that we avoid to call filterTasks needlessly.
@@ -298,7 +302,7 @@ const setItemsCounter = () => {
 };
 
 // This fucntion creates a small confirmation menu for deleting the completed tasks so they are not deleted accidently. Also, directly executes the corresponding actions based on which button the user press
-const displayConfirmation = () => {
+const displayConfirmation = async () => {
   // Creates the container of the confirmation menu
   let container = document.createElement("div");
   // Uses tailwind classes to give it an overlay appearance over the whole viewport
@@ -334,7 +338,10 @@ const displayConfirmation = () => {
           task.parentNode.parentNode.remove();
         }
         // Empties the server list
-        deleteCompletedtasksList();
+        fetch("/api/tasks", {
+          method: "DELETE",
+          body: JSON.stringify({}),
+        });
         // Removes the whole menu from the document
         container.remove();
         // Updates the activeTasks' counter
@@ -350,7 +357,6 @@ const displayConfirmation = () => {
         ) {
           filterTasks(currentFilterId);
         }
-        showServerList()
       } else if (event.target.matches("#cancel")) {
         // If the cancel button is pressed, just removes the menu from the document
         container.remove();
@@ -372,7 +378,7 @@ const createNewTask = async (task) => {
       .querySelector("[data-selector='template']")
       .cloneNode(true);
     // Changes the the template value in the data-selector attribute that makes filters ignore it for task, which will achieve the opposite
-    taskElement.dataset.selector = 'task'
+    taskElement.dataset.selector = "task";
     // Makes it visible
     // taskElement.style.display = "flex";
     taskElement.classList.remove("hidden");
@@ -381,9 +387,14 @@ const createNewTask = async (task) => {
     // Set new taskElement description
     taskElement.querySelector("label").innerHTML = task.description;
     // Set new ids
-    taskElement.querySelector("input").id = `checkbox-${task.id}`;
-    taskElement.querySelector("label").htmlFor = `checkbox-${task.id}`;
-    taskElement.querySelector("label").id = `label-${task.id}`;
+    taskElement.querySelector("input").id = `checkbox-${task._id}`;
+    const label = taskElement.querySelector("label");
+    label.htmlFor = `checkbox-${task._id}`;
+    label.id = `label-${task._id}`;
+    if (task.completed) {
+      label.classList.add("line-through");
+      label.classList.add("text-hint");
+    }
     // Set the state of the checkbox input
     taskElement.querySelector("input").checked = task.completed;
     // Adds the element to the taskContainer
