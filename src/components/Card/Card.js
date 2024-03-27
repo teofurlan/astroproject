@@ -1,47 +1,51 @@
-/**
- * GLOBAL VARIABLES
- */
-// Lists to store which of the tasks are completed (its checkbox.checked is true) and which not. This approach can seem redundant, given the tasks list can be accessed any time through the taskContainer and every tasks needs to pass through a loop for filtering. However, this way we are saving the resourses needed to check whether its checkbox is checked or not and also avoid to query the documents too many times. In addition, storing them into js arrays allow us to use a number of useful methods.
-
-import { showServerList, toggleTask } from "../../services/Tasks";
-import { createNewTask } from "../Dropdown/Dropdown";
-
-// Both lists will be updated each time a tasks is checked or unchecked and when the. The activeTasks will aslo be updated when a new task is created and. The completedTasks is cleared when the Clear Completed option is selected
-let activeTasks = Array.from(document.querySelectorAll(".task"));
-let completedTasks = [];
-// Stores the id of the current filtering section in the page
-let currentId = "showAll";
-// Stores the span with a label that is displayed in the background in case that there are no tasks in that filtering section
-let advice;
+import {
+  createTask,
+  deleteCompletedtasksList,
+  showServerList,
+  toggleTask,
+} from "../../services/Tasks";
 
 // Makes a request to the server side to get the list of tasks. Uses the .then() function to handle the promise that's returned by the
 fetch("/api/tasks")
   .then((r) => r.json())
   .then((data) => {
+    // Get the list of tasks from the promise
     const tasksList = data.tasksList;
-    // activeTasks
-    activeTasks = Array.from(
-      tasksList.map(
-        (task) => new createNewTask(task.description, task.id, task.completed)
-      )
-    );
+    console.log(tasksList)
+    // Creates the tasks in the document from the list of tasks in the server
+    for (let task of tasksList) {
+      createNewTask(task)
+    }
+    // Set the initial filter so the logic works correctly
+    filterTasks("showAll");
+    // Set the initial value of the Items Counter
+    setItemsCounter();
   });
 
 /**
- * EVENT LISTENERS
+ * EVENT HANDLING
  */
+
+// Startup
+window.onload = () => {
+  // Set the initial filter and gives the selected style to its button
+  const showAllButton = document.getElementById("showAll");
+  showAllButton.dataset.selected = "true";
+  showAllButton.style.border = "1.5px solid #f5e4e4";
+
+};
 
 // Checks if a task checkbox has been checked or unchecked to change its style. Updates activeTaks and completedTasks lists
 document.addEventListener("change", (event) => {
+  const currentFilterId = getCurrentFilterId();
   // First, we check if the change event in the document was trigger by pressing the dropdown
   if (event.target.matches("#dropdown")) {
     // If the tasks list has been opened, we filter the tasks, this action fulfills the purpose to show the advice label in case that it corresponds when the tasks list is opened, otherwise, if the advice was displayed and then the dropdown was closed and opened again, the advice would just disappear
     if (event.target.checked) {
-      filterTasks(currentId);
+      filterTasks(currentFilterId);
     } else {
-      // Removes the advice if exists and makes its variable null. This way it does not overlaps with the dropdown's advice
-      advice?.remove();
-      advice = null;
+      // Removes the advice if exists and makes. This way it does not overlaps with the dropdown's advice
+      document.getElementById("advice")?.remove();
     }
     // Stops the execution of the function
     return;
@@ -60,50 +64,57 @@ document.addEventListener("change", (event) => {
   label.classList.toggle("text-hint");
   // Change the value of the task object in the server side by passing the id of the pressed checkbox
   toggleTask(checkbox.id.split("-")[1]);
-  // Update the track lists. As we access the checkboxs, and they are inside a div inside the whole tasks div, we have to call the checkbox.parentNode.parentNode so we store the task div
-  if (checkbox.checked) {
-    completedTasks.push(checkbox.parentNode.parentNode);
-    activeTasks = activeTasks.filter(
-      (element) => element.querySelector(".checkbox") !== checkbox
-    );
-  } else {
-    completedTasks = completedTasks.filter(
-      (element) => element.querySelector(".checkbox") !== checkbox
-    );
-    activeTasks.push(checkbox.parentNode.parentNode);
-  }
   // If the current filter section is not'showAll', we filter the tasks again, this way if an active tasks is checked as completed being in the active filter, it will be removed from the view and if a completed tasks is unchecked being in the completed section it will aslo be removed from the view
-  
-  if (currentId !== "showAll") {
-    filterTasks(currentId);
+
+  if (currentFilterId !== "showAll") {
+    filterTasks(currentFilterId);
   }
   // Updates the active tasks counter
   setItemsCounter();
 });
 
 // Listens to the event that is dispatched in the Dropdown.js script when a new tasks is added to the lisks of tasks
-document.addEventListener("addedNewTask", (event) => {
-  // Adds the new task, passed as the element of the event, to the activeTasks list
-  activeTasks.push(event.detail.element);
-  // Updates the items counter
-  setItemsCounter();
-  // Checks if a new task has been added in the taskContainer and updates the filter in case that the currentId is showCompleted. By validating that we avoid to call filterTasks needlessly.
-  if (currentId === "showCompleted") {
-    filterTasks(currentId);
-  }
-});
+document
+  .getElementById("textInput")
+  .addEventListener("addedNewTask", async (event) => {
+    // const task = createNewTask(event.detail);
+    const newTask = await createTask(event.detail);
+    createNewTask(newTask);
+    // .then((taskElement) => {
+    //   console.log(taskElement);
+    //   // if (taskElement) {
+    //   document.getElementById("tasksContainer").appendChild(taskElement);
+    //   console.log("Server List");
+    //   showServerList();
+    //   // }
+    // });
+    // Updates the items counter
+    setItemsCounter();
+    // Checks if a new task has been added in the taskContainer and updates the filter in case that the currentId is showCompleted. By validating that we avoid to call filterTasks needlessly.
+    const currentFilterId = getCurrentFilterId();
+    if (currentFilterId === "showCompleted") {
+      filterTasks(currentFilterId);
+    }
+  });
 
 // Event Listener for the filtering buttons in the cardFooter. Checks if the div that contains the buttons has been pressed
-document.getElementById("cardFooter").addEventListener("click", (e) => {
+document.getElementById("cardFooter").addEventListener("click", (event) => {
   // Check if the triggered event's target is a button
-  if (e.target.matches("button")) {
+  if (event.target.matches("button")) {
     // Call the function that handles the possible buttons and passes the pressed button's id only if the dropdown is open and the pressed button is different to the current filter section. This way we avoid wasting resourses.
+
     if (
       document.getElementById("dropdown").checked &&
-      e.target.getAttribute("id") !== currentId
+      event.target.getAttribute("id") !== getCurrentFilterId()
     ) {
-      filterTasks(e.target.getAttribute("id"));
+      filterTasks(event.target.getAttribute("id"));
     }
+    // Dispatches an event to trigger the style and attribute updating in the cardFooter component's logic. Passes the id of the pressed button in the event's detail
+    document
+      .getElementById("cardFooter")
+      .dispatchEvent(
+        new CustomEvent("changeFilter", { detail: event.target.id })
+      );
   }
 });
 
@@ -116,167 +127,158 @@ document.getElementById("clearCompleted").addEventListener("click", () => {
  * FUNCTIONS
  */
 
-//
-
-// Takes the id of the that is now selected, resets the style of the three buttons and applies the selected style to the one that matches the id. Updates the value of the global variable 'currentId'
-const updateSelectedButton = (selectedId) => {
-  // We access the list of buttons in the cardFooter by querying them with their element's type selector. Them loop through each one of them with the forEach method and uses and anonymous function to give the selected sytle only to the button with the id equal to selectedId
-  document
-    .getElementById("cardFooter")
-    .querySelectorAll("button")
-    .forEach((button) => {
-      if (button.id === selectedId) {
-        button.style.border = "1.5px solid #f5e4e4"
-        button.classList.add('currentFilter')
-      } 
-      else {
-        button.style.border = "none";
-        button.classList.remove('currentFilter')
-      }
-    });
-  // document.getElementById(selectedId).style.border = "1.5px solid #f5e4e4";
-  // Updates the global variable currentId with the id of the selected button
-  currentId = selectedId;
-};
-
 // This function handles the change of filter selection, so it takes the id of the pressed button as argument
-const filterTasks = (buttonId) => {
+const filterTasks = (newFilterId) => {
+  // Stores the previous filterId in a local variable
+  const lastFilterId = getCurrentFilterId();
   // Uses a switch to handle the three posibilities
-  switch (buttonId) {
+  switch (newFilterId) {
     case "showAll":
-      setShowAll(currentId);
+      setShowAll(lastFilterId);
       break;
     case "showActive":
-      setShowActive();
+      setShowActive(lastFilterId);
       break;
     case "showCompleted":
-      setShowCompleted();
+      setShowCompleted(lastFilterId);
+      break;
+    default:
       break;
   }
-  // Updates the selected button by calling this funtion. As a reminder, the currentId variable is updated inside this function
-  updateSelectedButton(buttonId);
 };
 
+/**
+ * FILTERING FUNCTIONS
+ */
+
 // Function that shows all the tasks, completed and active, and set corresponding transitions
-const setShowAll = (previousFilter) => {
+const setShowAll = (lastFilterId) => {
   // Removes the background advice if exists
-  taskContainer.getElementById("advice")?.remove();
+  document.getElementById("advice")?.remove();
   // Get the list of tasks
-  const tasksList = document.querySelectorAll(".task");
+  const tasksList = document.querySelectorAll("[data-selector='task']");
   // Checks if there is any tasks at all, if not, displays an advice at the background and stops the function
-  if (tasksList.length <= 0 && completedTasks.length <= 0) {
+  if (tasksList.length <= 0) {
     displayAdvice("there are no tasks yet");
     return;
   }
   // Loop through the list of tasks
-  for (let i = 0; i < tasksList.length; i++) {
-    // Handles the transition if the previous filter was showCompleted. The tasks are first moved fully to the right and then back to normal position after some milisecons so it gives the impression that they are coming from the right
-    if (previousFilter === "showCompleted") {
-      activeTasks[i].style.transform = "translateX(100%)";
+  for (const task of tasksList) {
+    // Makes each task visible
+    task.style.display = "flex";
+    // Active tasks
+    if (!task.querySelector(".checkbox").checked) {
+      // Handles the transition if the previous filter was showCompleted. The tasks are first moved fully to the right and then back to normal position after some milisecons so it gives the impression that they are coming from the right
+      if (lastFilterId === "showCompleted") {
+        task.style.transform = "translateX(100%)";
+        setTimeout(() => {
+          task.style.transform = "translateX(0)";
+        }, 300);
+      }
+    } else {
+      // Completed tasks
+      if (lastFilterId === "showCompleted") {
+        task.style.display = "none";
+        // task.style.transform = "translateX(100%)";
+        task.style.transform = "translateX(100%)";
+        task.style.display = "flex";
+        // setTimeout(() => {
+        //   task.style.transform = "translateX(0)";
+        // }, 330);
+      } else {
+        // The completed tasks are translated back to the normal position
+      }
       setTimeout(() => {
-        activeTasks[i].style.transform = "translateX(0)";
+        task.style.transform = "translateX(0)";
       }, 300);
     }
   }
-
-  // // Loop through the activeTasks list
-  // for (let i = 0; i < activeTasks.length; i++) {
-  //   // Make the activeTasks visible
-  //   activeTasks[i].style.display = "flex";
-  //   // Handles the transition if the previous filter was showCompleted. The tasks are first moved fully to the right and then back to normal position after some milisecons so it gives the impression that they are coming from the right
-  //   if (currentId === "showCompleted") {
-  //     activeTasks[i].style.transform = "translateX(100%)";
-  //     setTimeout(() => {
-  //       activeTasks[i].style.transform = "translateX(0)";
-  //     }, 300);
-  //   }
-  // }
-  // // Loop through the completedTasks list
-  // for (let i = 0; i < completedTasks.length; i++) {
-  //   // Make the completed tasks visible
-  //   completedTasks[i].style.display = "flex";
-  //   // Delay the translation to the normal position
-  //   setTimeout(() => {
-  //     completedTasks[i].style.transform = "translateX(0)";
-  //   }, 300);
 };
 
 // Function that handles the filtering and corresponding transitions to show only the active tasks, that are the ones which checkbox is unchecked
-const setShowActive = () => {
-  // Removes the background advice if exists and make its variable null
-  advice?.remove();
-  advice = null;
-  // Completed tasks
-  for (let i = 0; i < completedTasks.length; i++) {
-    // The completed tasks are translated to the completely to the right
-    completedTasks[i].style.transform = "translateX(100%)";
-    // To give for the translation transition to happend, we delay the disappearance of the tasks, which is achieve by setting its display property to 'none'
-    setTimeout(() => {
-      completedTasks[i].style.display = "none";
-    }, 300);
-  }
-  // Checks if there is any active tasks, if not it set the advice at the background. Also, stops the execution of the function, but only after the completed tasks are filtered.
-  if (activeTasks.length <= 0) {
-    displayAdvice("there are no active tasks yet");
-    return;
-  }
-  // Active tasks
-  for (let i = 0; i < activeTasks.length; i++) {
-    // If the previous filter was show completed
-    if (currentId === "showCompleted") {
-      // First we make the active tasks visible by setting its display property to flex, becuase in the 'Completed' section, it's set to none so they are not visible
-      activeTasks[i].style.display = "flex";
-      // Use a setTimeout() fucntion to delay the translation transition, which takes the parameter 0 because it's currenly with a -100% value from the completed filter
+const setShowActive = (lastFilterId) => {
+  // Removes the background advice if exists
+  document.getElementById("advice")?.remove();
+  // Get the list of tasks
+  const tasksList = document.querySelectorAll("[data-selector='task']");
+  let activeCount = 0;
+  for (const task of tasksList) {
+    if (!task.querySelector(".checkbox").checked) {
+      // If the previous filter was show completed
+      if (lastFilterId === "showCompleted") {
+        // First we make the active tasks visible by setting its display property to flex, becuase in the 'Completed' section, it's set to none so they are not visible
+        task.style.transform = "translateX(-100%)";
+        task.style.display = "flex";
+        // Use a setTimeout() fucntion to delay the translation transition, which takes the parameter 0 because it's currenly with a -100% value from the completed filter
+        setTimeout(() => {
+          task.style.transform = "translateX(0)";
+        }, 300);
+      }
+      activeCount++;
+    } else {
+      // The completed tasks are translated to the completely to the right
+      task.style.transform = "translateX(100%)";
+      // To give for the translation transition to happend, we delay the disappearance of the tasks, which is achieve by setting its display property to 'none'
       setTimeout(() => {
-        activeTasks[i].style.transform = "translateX(0)";
+        task.style.display = "none";
       }, 300);
     }
+  }
+  if (activeCount <= 0) {
+    displayAdvice("there are no active tasks yet");
   }
 };
 
 // Function that handles the filtering and transitions to see only the tasks that are completed, this are the ones which checkbox is checked
-const setShowCompleted = () => {
-  // Removes the background advice if exists and make its variable null
-  advice?.remove();
-  advice = null;
-  // Loop through the activeTasks list to access each one of them an modify its style's properties
-  for (let i = 0; i < activeTasks.length; i++) {
-    // Translate the active tasks fully to the left
-    activeTasks[i].style.transform = "translateX(-100%)";
-    // Use a setTimeout function to delay the setting the tasks display's property to 'none'
-    setTimeout(() => {
-      activeTasks[i].style.display = "none";
-    }, 300);
-  }
-  // Checks if there is any completed tasks, if not displays a label in the tasksContainer
-  if (completedTasks.length <= 0) {
-    displayAdvice("there are no completed tasks yet");
-    return;
-  }
-
-  // Loop through the completedTasks list
-  for (let i = 0; i < completedTasks.length; i++) {
-    // If the previous filter was the show all one, we make the tasks visible and 300ms latter translate them from the left to their normal position
-    if (currentId === "showAll") {
-      completedTasks[i].style.display = "flex";
-      setTimeout(() => {
-        completedTasks[i].style.transform = "translateX(0)";
-      }, 300);
-    } else if (currentId === "showActive") {
-      // If the previous filter was showActive, we first set its display to 'none' so when it's translated fully to the left the user don't see the transition. Then we make them visible asigning 'flex' as value of its display and delay its translation to the original position to achive a transition
-      completedTasks[i].style.display = "none";
-      completedTasks[i].style.transform = "translasteX(-100%)";
-      completedTasks[i].style.display = "flex";
-      setTimeout(() => {
-        completedTasks[i].style.transform = "translateX(0)";
-      }, 300);
+const setShowCompleted = (lastFilterId) => {
+  // Removes the background advice if exists
+  document.getElementById("advice")?.remove();
+  // Get the list of tasks
+  const tasksList = document.querySelectorAll("[data-selector='task']");
+  // Count the amount of completed tasks
+  let completedCounter = 0;
+  // Loop through the lisf of tasks to validate which is active and which completed.
+  for (const task of tasksList) {
+    // Checks if the task is active
+    if (!task.querySelector(".checkbox").checked) {
+      task.style.display = "none";
+      if (lastFilterId === "showAll") {
+        task.style.transform = "translateX(-100%)";
+        setTimeout(() => {
+          task.style.display = "none";
+        }, 300);
+      } else {
+        task.style.display = "none";
+      }
+    } else {
+      // In the case that the task is completed...
+      task.style.display = "flex";
+      if (lastFilterId === "showAll") {
+        // task.style.display = "flex";
+        task.style.transform = "translateX(-100%)";
+        setTimeout(() => {
+          task.style.transform = "translateX(0)";
+        }, 300);
+      } else if (lastFilterId === "showActive") {
+        // If the previous filter was showActive, we first set its display to 'none' so when it's translated fully to the left the user don't see the transition. Then we make them visible asigning 'flex' as value of its display and delay its translation to the original position to achive a transition
+        task.style.display = "none";
+        task.style.transform = "translateX(-100%)";
+        task.style.display = "flex";
+        setTimeout(() => {
+          task.style.transform = "translateX(0)";
+        }, 300);
+      }
+      completedCounter++;
     }
+  }
+  if (completedCounter <= 0) {
+    displayAdvice("there are no completed tasks yet");
   }
 };
 
 // Displays a span with a label in the taskContainer which text is passed as a parameter
 const displayAdvice = (text) => {
-  advice = document.createElement("span");
+  const advice = document.createElement("span");
   advice.setAttribute("id", "advice");
   advice.classList =
     "absolute flex justify-center items-center w-full h-full text-hint";
@@ -288,12 +290,14 @@ const displayAdvice = (text) => {
 
 // This function updates the span and the left of the CardFooter, that shows how many active tasks are left
 const setItemsCounter = () => {
-  document.getElementById(
-    "itemsCounter"
-  ).innerHTML = `${activeTasks.length} items left`;
+  document.getElementById("itemsCounter").innerHTML = `${
+    Array.from(document.querySelectorAll('[data-selector="task"]')).filter(
+      (task) => !task.querySelector("input")?.checked
+    ).length
+  } items left`;
 };
 
-// This fucntion created a small confirmation menu for deleting the completed tasks so they are not deleted accidently. Also, directly executes the corresponding actions based on which button the user press
+// This fucntion creates a small confirmation menu for deleting the completed tasks so they are not deleted accidently. Also, directly executes the corresponding actions based on which button the user press
 const displayConfirmation = () => {
   // Creates the container of the confirmation menu
   let container = document.createElement("div");
@@ -316,53 +320,75 @@ const displayConfirmation = () => {
   // Adds the whole confirmation menu to the body
   document.querySelector("body").appendChild(container);
   // Adds an EventListener to the container of the buttons in the menu and gets the event as argument
-  document.getElementById("buttonsContainer").addEventListener("click", (e) => {
-    // Handles the two posible options
-    if (e.target.matches("#accept")) {
-      // Removes all the completed tasks from the document
-      for (let i = 0; i < completedTasks.length; i++) {
-        completedTasks[i].remove();
+  document
+    .getElementById("buttonsContainer")
+    .addEventListener("click", (event) => {
+      // Handles the two posible options
+      if (event.target.matches("#accept")) {
+        // Get the list of completed tasks
+        const completedTasks = document.querySelectorAll(
+          'input.checkbox[type = "checkbox"]:checked'
+        );
+        // Removes all the completed tasks from the document. As we are deleting the whole task component, we need to remove its grandfather
+        for (let task of completedTasks) {
+          task.parentNode.parentNode.remove();
+        }
+        // Empties the server list
+        deleteCompletedtasksList();
+        // Removes the whole menu from the document
+        container.remove();
+        // Updates the activeTasks' counter
+        setItemsCounter();
+        // Call the filterTasks function only if the current filtering section is not showActive. This is because if we are in the completed filtering section and the completed tasks are deleted, the advice at the background won't be displayed unless the filter is updated. Similarly, if the current filtering section is showAll AND the only tasks in existence are completed, the filter needs to be updated so the advice is shown.
+        const currentFilterId = getCurrentFilterId();
+        if (
+          currentFilterId === "showCompleted" ||
+          (currentFilterId === "showAll" &&
+            document.querySelectorAll(
+              'input.checkbox[type = "checkbox"]:not(:checked)'
+            ).length <= 0)
+        ) {
+          filterTasks(currentFilterId);
+        }
+        showServerList()
+      } else if (event.target.matches("#cancel")) {
+        // If the cancel button is pressed, just removes the menu from the document
+        container.remove();
       }
-      // Empties the completedTasks list
-      completedTasks = [];
-      // Removes the whole menu from the documet
-      container.remove();
-      // Empties the completedTasks list
-      completedTasks = [];
-      // Updates the activeTasks' counter
-      setItemsCounter();
-      // Call the filterTasks function only if the current filtering section is not showActive. This is because if we are in the completed filtering section and the completed tasks are deleted, the advice at the background won't be displayed unless the filter is updated. Similarly, if the current filtering section is showAll AND the only tasks in existence are completed, the filter needs to be updated so the advice is shown.
-      if (
-        currentId === "showCompleted" ||
-        (currentId === "showAll" && activeTasks.length <= 0)
-      ) {
-        filterTasks(currentId);
-      }
-    } else if (e.target.matches("#cancel")) {
-      // If the cancel button is pressed, just removes the menu from the document
-      console.log(container);
-      container.remove();
-    }
-  });
+    });
 };
 
 // Returns the current filter that's being applied to the tasks
 const getCurrentFilterId = () => {
-  // Stores all the buttons in the cardFooter in a list
-  let buttons = document
-  .getElementById("cardFooter")
-  .querySelectorAll("button")
-  // Loop through the buttons' list asigning each button to the button variable
-  for (let button of buttons) {
-    // Searches the button that has 
-    if (button.classList.contains('currentFilter')) {  
-     return button.getAttribute('id')
-    }
-  }
-}
+  return document.querySelector('[data-selected="true"]').getAttribute("id");
+};
 
-// Initial call to the function to set the default selected button to showAll
-updateSelectedButton(currentId);
-// Set the initial count of active tasks
-setItemsCounter();
-console.log(getCurrentFilterId())
+// Takes taskDescription (string) as parameter and returns the node that represents the taskElement.astro component with the taskDescription as content of its label
+const createNewTask = async (task) => {
+  try {
+    // Selects the template that's used to create a new taskElement component and clones it
+    const taskElement = document
+      .getElementById("tasksContainer")
+      .querySelector("[data-selector='template']")
+      .cloneNode(true);
+    // Changes the the template value in the data-selector attribute that makes filters ignore it for task, which will achieve the opposite
+    taskElement.dataset.selector = 'task'
+    // Makes it visible
+    // taskElement.style.display = "flex";
+    taskElement.classList.remove("hidden");
+    taskElement.classList.add("flex");
+    taskElement.querySelector("input").classList.add("checkbox");
+    // Set new taskElement description
+    taskElement.querySelector("label").innerHTML = task.description;
+    // Set new ids
+    taskElement.querySelector("input").id = `checkbox-${task.id}`;
+    taskElement.querySelector("label").htmlFor = `checkbox-${task.id}`;
+    taskElement.querySelector("label").id = `label-${task.id}`;
+    // Set the state of the checkbox input
+    taskElement.querySelector("input").checked = task.completed;
+    // Adds the element to the taskContainer
+    document.getElementById("tasksContainer").appendChild(taskElement);
+  } catch (error) {
+    throw error;
+  }
+};
